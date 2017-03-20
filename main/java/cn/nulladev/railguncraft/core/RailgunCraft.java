@@ -15,7 +15,7 @@ public class RailgunCraft {
 
 	public static final String MODID = "railguncraft";
 	public static final String MODNAME = "RailgunCraft";
-    public static final String VERSION = "1.8.9 - Demo";
+    public static final String VERSION = "1.10.2 - Demo";
     
 	public static final RGCCreativeTabs CreativeTabs = new RGCCreativeTabs();
 

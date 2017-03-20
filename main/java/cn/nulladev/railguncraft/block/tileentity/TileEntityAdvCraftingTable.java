@@ -85,19 +85,20 @@ public class TileEntityAdvCraftingTable extends TileEntity implements ITickable,
 	}
 
 	public void onLoaded() {
-	    if (!this.worldObj.isRemote) {
-	    	this.addedToEnergyNet = (!MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this)));
+	    if (this.worldObj.isRemote) {
+	    	return;
 	    }
+	    this.addedToEnergyNet = (!MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this)));
 	    this.loaded = true;
 	}
 
 	@Override
 	public void onChunkUnload() {
-	    if (this.loaded) {
+		if (this.loaded) {
 	    	onUnloaded();
 	    }
-	    super.onChunkUnload();
-	  }
+		super.onChunkUnload();
+	}
 
 	public void onUnloaded() {
 		if (this.addedToEnergyNet)
