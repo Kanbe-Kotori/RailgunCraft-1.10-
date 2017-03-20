@@ -1,0 +1,9 @@
+{
+    "parent": "block/cube_bottom_top",
+    "textures": {
+        "particle": "railguncraft:blocks/adv_crafting_table_top",
+        "bottom": "railguncraft:blocks/adv_crafting_table_bottom",
+        "top": "railguncraft:blocks/adv_crafting_table_top",
+        "side": "railguncraft:blocks/adv_crafting_table_other"
+    }
+}
