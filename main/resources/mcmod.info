@@ -1,14 +1,14 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+  "modid": "railguncraft",
+  "name": "Railgun Craft",
+  "description": "not written yet.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "authorList": ["Kotori"],
+  "credits": "NullaDev, 2015-2017",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []

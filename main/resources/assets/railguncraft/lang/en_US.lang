@@ -1,6 +1,8 @@
 item.electromagnet.name=Electromagnet
+item.EMP_shield.name=EMP Shield
+item.nano_claw.name=Nano Claw
 item.railgun.name=Railgun
 
 tile.adv_crafting_table.name=Advanced Crafting Table
 
-itemGroup.railguncraft=Railgun！
+itemGroup.RailgunCraft=RailgunCraft

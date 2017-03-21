@@ -26,17 +26,15 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
 public class TileEntityAdvCraftingTable extends TileEntity implements ITickable, IInventory, IEnergyTile, IEnergySink, INetworkDataProvider, INetworkUpdateListener {
-
-	public boolean initialized = false;
-	public boolean addedToEnergyNet;
-	private boolean created = false;
-	public boolean loaded = false;
 	
 	private ItemStack stack[] = new ItemStack[27];
 	
 	public int currentBuffer = 0;
 	public final int maxBuffer = 10000;
 	
+	private int loadState = 0;
+	private boolean addedToEnet;
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
@@ -69,48 +67,50 @@ public class TileEntityAdvCraftingTable extends TileEntity implements ITickable,
     }
 	
     @Override
+	public final void invalidate() {
+    	if (this.loadState != 3)
+    		onUnloaded();
+    	super.invalidate();
+	}
+
+    @Override
+	public final void onChunkUnload() {
+    	if (this.loadState != 3)
+    		onUnloaded();
+    	super.onChunkUnload();
+	}
+
+    @Override
 	public void validate() {
-		super.validate();
-	    if (isInvalid())
-	    	return;
-	    onLoaded();
-	}
-	
-	@Override
-	public void invalidate() {
-		if (this.loaded) {
-			onUnloaded();
-	    }
-	    super.invalidate();
+    	super.validate();
+    	if ((this.worldObj == null) || (this.pos == null))
+    		throw new IllegalStateException("no world/pos");
+    	
+    	if ((this.loadState != 0) && (this.loadState != 3))
+    		throw new IllegalStateException("invalid load state: " + this.loadState);
+    	
+    	this.loadState = 1;
 	}
 
-	public void onLoaded() {
-	    if (this.worldObj.isRemote) {
-	    	return;
-	    }
-	    this.addedToEnergyNet = (!MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this)));
-	    this.loaded = true;
-	}
+    protected void onLoaded() {
+      if (this.loadState != 1)
+    	  throw new IllegalStateException("invalid load state: " + this.loadState);
+      
+      if (!this.worldObj.isRemote)
+          this.addedToEnet = (!MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this)));
 
-	@Override
-	public void onChunkUnload() {
-		if (this.loaded) {
-	    	onUnloaded();
-	    }
-		super.onChunkUnload();
-	}
+      this.loadState = 2;
+    }
 
-	public void onUnloaded() {
-		if (this.addedToEnergyNet)
-		      this.addedToEnergyNet = MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
-	}
+	protected void onUnloaded() {
+		if (this.loadState == 3)
+			throw new IllegalStateException("invalid load state: " + this.loadState);
+		
+		if (this.addedToEnet)
+			this.addedToEnet = MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 
-	public void intialize() {
-	    this.initialized = true;
-	    if (this.addedToEnergyNet)
-	    	return;
-	    onLoaded();
-	}
+		this.loadState = 3;
+    }
 
 	@Override
 	public void update() {
@@ -118,10 +118,10 @@ public class TileEntityAdvCraftingTable extends TileEntity implements ITickable,
 		/*if (this.worldObj.isRemote) {
 			return;
 		}*/
-		
-		if ((!this.initialized) && (this.worldObj != null)) {
-	    	intialize();
-	    }
+		if (this.loadState == 1)
+			this.onLoaded();
+		if (this.loadState != 2)
+			return;
 		
 		ItemStack[][] s = {
 				{stack[0], 	stack[1], 	stack[2], 	stack[3], 	stack[4]},
