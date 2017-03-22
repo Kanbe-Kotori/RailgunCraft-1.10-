@@ -253,9 +253,9 @@ public class EntityRailgun extends EntityHasOwner implements IProjectile{
 	
 	public Vec3d getOrigPos() {
 		
-		float x = this.dataManager.get(new DataParameter(74, DataSerializers.FLOAT));
-		float y = this.dataManager.get(new DataParameter(75, DataSerializers.FLOAT));
-		float z = this.dataManager.get(new DataParameter(76, DataSerializers.FLOAT));
+		float x = Float.valueOf(this.dataManager.get(new DataParameter(74, DataSerializers.FLOAT)).toString());
+		float y = Float.valueOf(this.dataManager.get(new DataParameter(75, DataSerializers.FLOAT)).toString());
+		float z = Float.valueOf(this.dataManager.get(new DataParameter(76, DataSerializers.FLOAT)).toString());
 
 		return new Vec3d(x, y, z);
 	}

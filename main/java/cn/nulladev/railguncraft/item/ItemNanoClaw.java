@@ -3,6 +3,8 @@ package cn.nulladev.railguncraft.item;
 import java.util.List;
 import java.util.Random;
 
+import cn.nulladev.railguncraft.core.RGCUtils;
+
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
@@ -37,8 +39,20 @@ public class ItemNanoClaw extends RGCItemBase implements IElectricItem {
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean par5) {
 	    super.onUpdate(stack, world, entity, slot, (par5) && (isActive(stack)));
-	    if (!isActive(stack))
-	    	return;
+		NBTTagCompound nbt = RGCUtils.get_or_create_nbt(stack);
+		
+		if (!nbt.hasKey("dirty")) {
+			nbt.setBoolean("dirty", false);
+		}
+		
+		if (!isActive(stack)) {
+			if (nbt.getBoolean("dirty")) {
+				setActive(nbt, true);
+				nbt.setBoolean("dirty", false);
+			} else {
+				return;
+			}
+	    }
 	    if (slot < 9) {
 	    	if (!ElectricItem.manager.use(stack, 16.0D, (EntityLivingBase)entity)) {
 	    		setActive(stack.getTagCompound(), false);
@@ -52,9 +66,10 @@ public class ItemNanoClaw extends RGCItemBase implements IElectricItem {
 	
 	@Override
 	public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player) {
+		NBTTagCompound nbt = RGCUtils.get_or_create_nbt(stack);
 	    if (isActive(stack)) {
 	    	if (!ElectricItem.manager.canUse(stack, 400.0D)) {
-		    	this.setActive(stack.getTagCompound(), false);;
+		    	this.setActive(nbt, false);;
 		    }
 	    }
 
@@ -66,22 +81,15 @@ public class ItemNanoClaw extends RGCItemBase implements IElectricItem {
 		if (world.isRemote)
 			return new ActionResult(EnumActionResult.PASS, stack);
 
-		NBTTagCompound nbt;
-		if (stack.getTagCompound() != null) {
-			nbt = stack.getTagCompound();
-		} else {
-			nbt = new NBTTagCompound();
-			stack.setTagCompound(nbt);
-			setActive(nbt, false);
-		}
+		NBTTagCompound nbt = RGCUtils.get_or_create_nbt(stack);
 
 	    if (isActive(nbt)) {
 	    	setActive(nbt, false);
-	    } else if (ElectricItem.manager.canUse(stack, 128.0D)) {
+	    } else if (ElectricItem.manager.canUse(stack, 16.0D)) {
 	    	setActive(nbt, true);
 	    }
 
-	    return super.onItemRightClick(stack, world, player, hand);
+    	return new ActionResult(EnumActionResult.SUCCESS, stack);
 	    
 	}
 	
@@ -89,30 +97,32 @@ public class ItemNanoClaw extends RGCItemBase implements IElectricItem {
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
 		if (!isActive(stack))
 			return true;
-	    /*if (!ElectricItem.manager.use(stack, 4096.0D, attacker))
-	    	return true;
-	    float extraDamage = 9F + 18F * new Random().nextFloat();
-	    if (attacker instanceof EntityPlayer)
-	    	target.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer)attacker), extraDamage);
-	    else
-	    	target.attackEntityFrom(DamageSource.causeMobDamage(attacker), extraDamage);*/
+		NBTTagCompound nbt = RGCUtils.get_or_create_nbt(stack);
+		nbt.setBoolean("dirty", true);
+		setActive(nbt, false);
     	return true;
     }
 
 	public static boolean isActive(ItemStack stack) {
-		NBTTagCompound nbt;
-		if (stack.getTagCompound() != null) {
-			nbt = stack.getTagCompound();
-		} else {
-			nbt = new NBTTagCompound();
-			stack.setTagCompound(nbt);
-			setActive(nbt, false);
+		NBTTagCompound nbt = RGCUtils.get_or_create_nbt(stack);	
+		if (!nbt.hasKey("active")) {
+			nbt.setBoolean("active", false);
+			return false;
 		}
 		return isActive(nbt);
 	}
 
 	public static boolean isActive(NBTTagCompound nbt) {
+		if (!nbt.hasKey("active")) {
+			nbt.setBoolean("active", false);
+			return false;
+		}
 		return nbt.getBoolean("active");
+	}
+	
+	public static void setActive(ItemStack stack, boolean active) {
+		NBTTagCompound nbt = RGCUtils.get_or_create_nbt(stack);	
+		nbt.setBoolean("active", active);
 	}
 
 	public static void setActive(NBTTagCompound nbt, boolean active) {
@@ -161,6 +171,7 @@ public class ItemNanoClaw extends RGCItemBase implements IElectricItem {
 
 	    if ((ElectricItem.manager.canUse(stack, 400.0D)) && (isActive(stack))) {
 	    	dmg = 6 + new Random().nextInt(13);
+	    	//System.out.println("random ret");
 	    }
 
 	    Multimap ret = HashMultimap.create();
@@ -170,15 +181,6 @@ public class ItemNanoClaw extends RGCItemBase implements IElectricItem {
 
 	    return ret;
 	  }
-	
-	/*
-	@Override
-	public Multimap<String, AttributeModifier> getItemAttributeModifiers() {
-        Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers();
-        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Weapon modifier", 4D, 0));
-        return multimap;
-    }
-    */
 	
 	@Override
 	@SideOnly(Side.CLIENT)

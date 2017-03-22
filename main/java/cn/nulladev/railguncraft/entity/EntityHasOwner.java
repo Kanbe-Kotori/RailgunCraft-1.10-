@@ -40,7 +40,7 @@ public class EntityHasOwner extends Entity implements IEntityOwnable {
     }
 	
 	public String getOwnerName() {
-		return this.dataManager.get(new DataParameter(73, DataSerializers.STRING));
+		return this.dataManager.get(new DataParameter(73, DataSerializers.STRING)).toString();
 	}
 
 	@Override
