@@ -54,11 +54,11 @@ public class ItemNanoClaw extends RGCItemBase implements IElectricItem {
 			}
 	    }
 	    if (slot < 9) {
-	    	if (!ElectricItem.manager.use(stack, 16.0D, (EntityLivingBase)entity)) {
+	    	if (!ElectricItem.manager.use(stack, 4.0D, (EntityLivingBase)entity)) {
 	    		setActive(stack.getTagCompound(), false);
 	    	}
 	    } else {
-	    	if (!ElectricItem.manager.use(stack, 4.0D, (EntityLivingBase)entity)) {
+	    	if (!ElectricItem.manager.use(stack, 1.0D, (EntityLivingBase)entity)) {
 	    		setActive(stack.getTagCompound(), false);
 	    	}
 	    }
@@ -105,10 +105,6 @@ public class ItemNanoClaw extends RGCItemBase implements IElectricItem {
 
 	public static boolean isActive(ItemStack stack) {
 		NBTTagCompound nbt = RGCUtils.get_or_create_nbt(stack);	
-		if (!nbt.hasKey("active")) {
-			nbt.setBoolean("active", false);
-			return false;
-		}
 		return isActive(nbt);
 	}
 
@@ -122,7 +118,7 @@ public class ItemNanoClaw extends RGCItemBase implements IElectricItem {
 	
 	public static void setActive(ItemStack stack, boolean active) {
 		NBTTagCompound nbt = RGCUtils.get_or_create_nbt(stack);	
-		nbt.setBoolean("active", active);
+		setActive(nbt, active);
 	}
 
 	public static void setActive(NBTTagCompound nbt, boolean active) {

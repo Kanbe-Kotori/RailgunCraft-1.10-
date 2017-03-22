@@ -12,6 +12,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import cn.nulladev.railguncraft.core.RGCUtils;
 import cn.nulladev.railguncraft.entity.EMPShieldFinder;
 import cn.nulladev.railguncraft.entity.EntityEMPShield;
 import ic2.api.item.ElectricItem;
@@ -36,7 +37,16 @@ public class ItemEMPShield extends RGCItemBase implements IElectricItem {
 	    	return;
 	    }
 	    
-	    if (!ElectricItem.manager.use(stack, 16.0D, (EntityLivingBase)entity)) {
+	    if (entity.isDead) {
+	    	setActive(stack.getTagCompound(), false);
+	    	if (EMPShieldFinder.hasShield(entity)) {
+	    		EMPShieldFinder.getShield(entity).setDead();
+	    		EMPShieldFinder.removeShield(entity);
+	    	}
+	    	return;
+	    }
+	    
+	    if (!ElectricItem.manager.use(stack, 4.0D, (EntityLivingBase)entity)) {
 	    	setActive(stack.getTagCompound(), false);
 	    	if (EMPShieldFinder.hasShield(entity)) {
 	    		EMPShieldFinder.getShield(entity).setDead();
@@ -60,12 +70,8 @@ public class ItemEMPShield extends RGCItemBase implements IElectricItem {
 		if (world.isRemote)
 			return new ActionResult(EnumActionResult.PASS, stack);
 
-		NBTTagCompound nbt;
-		if (stack.getTagCompound() != null) {
-			nbt = stack.getTagCompound();
-		} else {
-			nbt = new NBTTagCompound();
-			stack.setTagCompound(nbt);
+		NBTTagCompound nbt = RGCUtils.get_or_create_nbt(stack);
+		if (!nbt.hasKey("active")) {
 			setActive(nbt, false);
 		}
 
@@ -75,31 +81,33 @@ public class ItemEMPShield extends RGCItemBase implements IElectricItem {
 	    		EMPShieldFinder.getShield(player).setDead();
 	    		EMPShieldFinder.removeShield(player);
 	    	}
-	    } else if (ElectricItem.manager.canUse(stack, 64.0D)) {
+	    } else if (ElectricItem.manager.canUse(stack, 16.0D)) {
 	    	setActive(nbt, true);
 	    	EntityEMPShield shield = new EntityEMPShield(world, player, stack);
 	    	EMPShieldFinder.addShield(player, shield);
 	    	player.worldObj.spawnEntityInWorld(shield);
 	    }
 
-	    return super.onItemRightClick(stack, world, player, hand);
+		return new ActionResult(EnumActionResult.SUCCESS, stack);
 	    
 	}
 
 	public static boolean isActive(ItemStack stack) {
-		NBTTagCompound nbt;
-		if (stack.getTagCompound() != null) {
-			nbt = stack.getTagCompound();
-		} else {
-			nbt = new NBTTagCompound();
-			stack.setTagCompound(nbt);
-			setActive(nbt, false);
-		}
+		NBTTagCompound nbt = RGCUtils.get_or_create_nbt(stack);
 		return isActive(nbt);
 	}
 
 	public static boolean isActive(NBTTagCompound nbt) {
+		if (!nbt.hasKey("active")) {
+			nbt.setBoolean("active", false);
+			return false;
+		}
 		return nbt.getBoolean("active");
+	}
+	
+	public static void setActive(ItemStack stack, boolean active) {
+		NBTTagCompound nbt = RGCUtils.get_or_create_nbt(stack);	
+		setActive(nbt, active);
 	}
 
 	public static void setActive(NBTTagCompound nbt, boolean active) {

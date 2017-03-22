@@ -104,14 +104,14 @@ public class Registerer {
 	
 	private static void registerRecipes() {
 		//------------electromagnet------------
-		ItemStack iron = new ItemStack(Items.IRON_INGOT, 1);
+		ItemStack irsh = IC2Items.getItem("crafting", "iron_shaft").copy();
 		ItemStack cpcb = IC2Items.getItem("cable", "type:copper,insulation:1").copy();
 		ItemStack[][] reactants_electromagnet = {
-				{cpcb, null, null, null, null},
 				{cpcb, cpcb, cpcb, cpcb, cpcb},
-				{iron, iron, iron, iron, iron},
 				{cpcb, cpcb, cpcb, cpcb, cpcb},
-				{null, null, null, null, cpcb}
+				{cpcb, cpcb, irsh, cpcb, cpcb},
+				{cpcb, cpcb, cpcb, cpcb, cpcb},
+				{cpcb, cpcb, cpcb, cpcb, cpcb}
 		};
 		electromagnet.setRecipe(reactants_electromagnet);
 		//------------electromagnet end------------

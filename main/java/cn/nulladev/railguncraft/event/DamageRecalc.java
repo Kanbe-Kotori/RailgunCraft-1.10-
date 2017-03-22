@@ -37,7 +37,7 @@ public class DamageRecalc {
 		}
 		
 		if (switchDmgType(event.getSource().damageType)) {
-			if (ElectricItem.manager.use(shield.originStack, 1024D * event.getAmount(), player)) {
+			if (ElectricItem.manager.use(shield.originStack, 128D * event.getAmount(), player)) {
 				event.setAmount(event.getAmount() * dmgVal);
 			}
 		}
