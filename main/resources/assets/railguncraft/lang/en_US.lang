@@ -1,8 +1,11 @@
 item.electromagnet.name=Electromagnet
+item.electromagnet_adv.name=Advanced Electromagnet
 item.EMP_shield.name=EMP Shield
 item.nano_claw.name=Nano Claw
 item.railgun.name=Railgun
+item.railgun_adv.name=Super Scientific Railgun
 
 tile.adv_crafting_table.name=Advanced Crafting Table
+item.railgun_adv.info=this name doesn't have any contact with a certain anime.
 
 itemGroup.RailgunCraft=RailgunCraft

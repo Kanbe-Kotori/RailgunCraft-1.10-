@@ -36,6 +36,8 @@ public class RGCAdvRecipe {
 						continue;
 					} else if (reactants[i][j].getItem() == ri[i][j].getItem() && ri[i][j].getItem()== IC2Items.getItem("energy_crystal").getItem()) {
 						continue;
+					} else if (reactants[i][j].getItem() == ri[i][j].getItem() && ri[i][j].getItem()== IC2Items.getItem("lapotron_crystal").getItem()) {
+						continue;
 					} else {
 						return false;
 					}

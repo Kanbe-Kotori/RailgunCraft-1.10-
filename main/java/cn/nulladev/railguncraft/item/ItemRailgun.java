@@ -1,5 +1,7 @@
 package cn.nulladev.railguncraft.item;
 
+import java.util.List;
+
 import cn.nulladev.railguncraft.core.RGCUtils;
 import cn.nulladev.railguncraft.entity.EntityRailgun;
 import ic2.api.item.ElectricItem;
@@ -11,14 +13,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemRailgun extends RGCItemBase implements IElectricItem {
 	
-	public ItemRailgun() {
-		super("railgun");
+	public final boolean isAdvanced;
+	
+	public ItemRailgun(boolean isAdv) {
+		super(isAdv? "railgun_adv" : "railgun");
+		this.isAdvanced = isAdv;
 		setMaxStackSize(1);
 		setMaxDamage(27);
 	}
@@ -36,12 +42,12 @@ public class ItemRailgun extends RGCItemBase implements IElectricItem {
 
 	@Override
 	public double getMaxCharge(ItemStack itemStack) {
-		return 1000000;
+		return isAdvanced? 10000000 : 1000000;
 	}
 
 	@Override
 	public int getTier(ItemStack itemStack) {
-		return 3;
+		return isAdvanced? 4 : 3;
 	}
 
 	@Override
@@ -62,7 +68,7 @@ public class ItemRailgun extends RGCItemBase implements IElectricItem {
 				return new ActionResult(EnumActionResult.PASS, stack);
 			}
 			
-			if (!ElectricItem.manager.use(stack, 100000, player)) {
+			if (!ElectricItem.manager.use(stack, isAdvanced? 100000 : 10000, player)) {
 				player.inventory.addItemStackToInventory(coin);
 				return new ActionResult(EnumActionResult.PASS, stack);
 			}
@@ -79,7 +85,15 @@ public class ItemRailgun extends RGCItemBase implements IElectricItem {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public EnumRarity getRarity(ItemStack stack) {
-	    return EnumRarity.UNCOMMON;
+	    return isAdvanced? EnumRarity.RARE : EnumRarity.UNCOMMON;
 	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+		if (isAdvanced) {
+			tooltip.add(I18n.translateToLocal("item.railgun_adv.info"));
+		}
+    }
 
 }

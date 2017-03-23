@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -31,9 +32,11 @@ import cn.nulladev.railguncraft.item.RGCItemBase;
 public class Registerer {
 	
 	public static RGCItemBase electromagnet;
+	public static RGCItemBase electromagnet_adv;
 	public static RGCItemBase EMP_shield;
 	public static RGCItemBase nano_claw;
 	public static RGCItemBase railgun;
+	public static RGCItemBase railgun_adv;
 	
 	public static Block adv_crafting_table;
 	
@@ -46,10 +49,12 @@ public class Registerer {
 	}
 	
 	private static void registerItems() {
-		electromagnet = new ItemElectromagnet();
+		electromagnet = new ItemElectromagnet(false);
+		electromagnet_adv = new ItemElectromagnet(true);
 		EMP_shield = new ItemEMPShield();
 		nano_claw = new ItemNanoClaw();
-		railgun = new ItemRailgun();
+		railgun = new ItemRailgun(false);
+		railgun_adv = new ItemRailgun(true);
 	}
 	
 	private static void registerBlocks() {
@@ -76,8 +81,11 @@ public class Registerer {
 	
 	public static void registerModels() {
 		ModelLoader.setCustomModelResourceLocation(electromagnet, 0, new ModelResourceLocation("railguncraft:electromagnet", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(electromagnet_adv, 0, new ModelResourceLocation("railguncraft:electromagnet_adv", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(railgun, 0, new ModelResourceLocation("railguncraft:railgun", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(railgun_adv, 0, new ModelResourceLocation("railguncraft:railgun_adv", "inventory"));
 
+		
 		ModelLoader.setCustomMeshDefinition(EMP_shield, new ItemMeshDefinition() {
 			@Override
 			public ModelResourceLocation getModelLocation(ItemStack stack) {
@@ -116,26 +124,57 @@ public class Registerer {
 		electromagnet.setRecipe(reactants_electromagnet);
 		//------------electromagnet end------------
 		
-		//------------electromagnet------------
+		//------------electromagnet_adv------------
+		ItemStack stsh = IC2Items.getItem("crafting", "steel_shaft").copy();
+		ItemStack cpgd = IC2Items.getItem("cable", "type:gold,insulation:2").copy();
+		ItemStack[][] reactants_electromagnet_adv = {
+				{cpgd, cpgd, cpgd, cpgd, cpgd},
+				{cpgd, cpgd, cpgd, cpgd, cpgd},
+				{cpgd, cpgd, stsh, cpgd, cpgd},
+				{cpgd, cpgd, cpgd, cpgd, cpgd},
+				{cpgd, cpgd, cpgd, cpgd, cpgd}
+		};
+		electromagnet.setRecipe(reactants_electromagnet_adv);
+		//------------electromagnet_adv end------------
+		
+		//------------railgun------------
 		ItemStack encr = new ItemStack(IC2Items.getItem("energy_crystal").getItem(), 1, OreDictionary.WILDCARD_VALUE);
 		ItemStack csir = IC2Items.getItem("casing", "iron").copy();
 		ItemStack pllp = IC2Items.getItem("plate", "lapis").copy();
 		ItemStack plob = IC2Items.getItem("plate", "obsidian").copy();
-		ItemStack cplt = IC2Items.getItem("crafting", "carbon_plate").copy();
 		ItemStack elmg = new ItemStack(electromagnet, 1);
 		ItemStack advc = IC2Items.getItem("crafting", "advanced_circuit").copy();
+		ItemStack cplt = IC2Items.getItem("crafting", "carbon_plate").copy();
+		ItemStack stbt = new ItemStack(Item.getItemFromBlock(Blocks.STONE_BUTTON), 1);
 		ItemStack[][] reactants_railgun = {
 				{null, encr, csir, csir, csir},
 				{pllp, pllp, elmg, advc, cplt},
 				{pllp, plob, plob, plob, cplt},
-				{null, null, null, null, cplt},
+				{null, null, null, stbt, cplt},
 				{null, null, null, cplt, cplt}
 		};
 		railgun.setRecipe(reactants_railgun);
-		//------------electromagnet end------------
+		//------------railgun end------------
+		
+		//------------railgun_adv------------
+		ItemStack lpcr = new ItemStack(IC2Items.getItem("lapotron_crystal").getItem(), 1, OreDictionary.WILDCARD_VALUE);
+		ItemStack adva = IC2Items.getItem("crafting", "alloy").copy();
+		ItemStack pldl = IC2Items.getItem("plate", "dense_lapis").copy();
+		ItemStack pldo = IC2Items.getItem("plate", "dense_obsidian").copy();
+		ItemStack adve = new ItemStack(electromagnet_adv, 1);
+		ItemStack rlgn = new ItemStack(railgun, 1);
+		ItemStack plri = IC2Items.getItem("crafting", "iridium").copy();
+		ItemStack[][] reactants_railgun_adv = {
+				{null, lpcr, adva, adva, adva},
+				{pldl, pldl, adve, rlgn, plri},
+				{pldl, pldo, pldo, pldo, plri},
+				{null, null, null, adva, plri},
+				{null, null, null, plri, plri}
+		};
+		railgun_adv.setRecipe(reactants_railgun_adv);
+		//------------railgun_adv end------------
 		
 		//------------nano_claw------------
-		ItemStack adva = IC2Items.getItem("crafting", "alloy").copy();
 		ItemStack[][] reactants_nano_claw = {
 				{cplt, null, cplt, null, null},
 				{null, cplt, null, cplt, null},
