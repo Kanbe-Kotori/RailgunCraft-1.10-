@@ -117,18 +117,19 @@ public class Registerer {
 		//------------electromagnet end------------
 		
 		//------------electromagnet------------
+		ItemStack encr = new ItemStack(IC2Items.getItem("energy_crystal").getItem(), 1, OreDictionary.WILDCARD_VALUE);
 		ItemStack csir = IC2Items.getItem("casing", "iron").copy();
+		ItemStack pllp = IC2Items.getItem("plate", "lapis").copy();
+		ItemStack plob = IC2Items.getItem("plate", "obsidian").copy();
 		ItemStack cplt = IC2Items.getItem("crafting", "carbon_plate").copy();
 		ItemStack elmg = new ItemStack(electromagnet, 1);
 		ItemStack advc = IC2Items.getItem("crafting", "advanced_circuit").copy();
-		ItemStack encr = new ItemStack(IC2Items.getItem("energy_crystal").getItem(), 1, OreDictionary.WILDCARD_VALUE);
-		ItemStack rubr = IC2Items.getItem("crafting", "rubber").copy();
 		ItemStack[][] reactants_railgun = {
 				{null, encr, csir, csir, csir},
-				{elmg, elmg, elmg, advc, cplt},
-				{null, null, null, cplt, cplt},
-				{elmg, elmg, cplt, null, rubr},
-				{null, null, null, null, rubr}
+				{pllp, pllp, elmg, advc, cplt},
+				{pllp, plob, plob, plob, cplt},
+				{null, null, null, null, cplt},
+				{null, null, null, cplt, cplt}
 		};
 		railgun.setRecipe(reactants_railgun);
 		//------------electromagnet end------------

@@ -1,7 +1,9 @@
 package cn.nulladev.railguncraft.item;
 
+import cn.nulladev.railguncraft.core.RGCUtils;
 import cn.nulladev.railguncraft.entity.EntityRailgun;
 import ic2.api.item.ElectricItem;
+import ic2.api.item.IC2Items;
 import ic2.api.item.IElectricItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
@@ -54,16 +56,15 @@ public class ItemRailgun extends RGCItemBase implements IElectricItem {
 		}
 		
 		if (!player.capabilities.isCreativeMode) {
+			ItemStack coin = IC2Items.getItem("crafting", "coin").copy();;
 			
-			/*if (player.inventory.hasItemStack(itemStackIn)) {
-				player.inventory.removeStackFromSlot(index)(Items.IRON_INGOT);
-			} else {
+			if (!RGCUtils.remove_a_stack(player, coin)) {
 				return new ActionResult(EnumActionResult.PASS, stack);
-			}*/
+			}
 			
 			if (!ElectricItem.manager.use(stack, 100000, player)) {
-				//player.inventory.addItemStackToInventory(IC2Items.getItem("coin").copy());
-				return new ActionResult(EnumActionResult.FAIL, stack);
+				player.inventory.addItemStackToInventory(coin);
+				return new ActionResult(EnumActionResult.PASS, stack);
 			}
 			
 		}
@@ -78,7 +79,7 @@ public class ItemRailgun extends RGCItemBase implements IElectricItem {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public EnumRarity getRarity(ItemStack stack) {
-	    return EnumRarity.EPIC;
+	    return EnumRarity.UNCOMMON;
 	}
 
 }

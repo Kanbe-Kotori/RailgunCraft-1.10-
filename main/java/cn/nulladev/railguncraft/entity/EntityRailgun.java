@@ -22,8 +22,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityRailgun extends EntityHasOwner implements IProjectile{
 	
-	protected static final float SPEED = 5.0F;
-	protected static final float DAMAGE = 40.0F;
+	protected static final float SPEED = 2.0F;
+	protected static final float DAMAGE = 16.0F;
 	
 	private int tileX = -1;
     private int tileY = -1;
@@ -35,28 +35,28 @@ public class EntityRailgun extends EntityHasOwner implements IProjectile{
     protected int ticksInAir;
     protected float mGravity = 0.03F;
     protected float velocityDecreaseRate = 0.99F;
-    public int age = 100;
+    public int age = 40;
     	
 	public EntityRailgun(World world, EntityPlayer thrower, double px, double py, double pz) {
         super(world);
         
         this.setOwner(thrower);
-        this.setSize(width, height);
+        this.setSize(0.2F, 0.2F);
         this.mGravity = 0;
-        this.setLocationAndAngles(thrower.posX, thrower.posY + thrower.getEyeHeight(), thrower.posZ, thrower.rotationYaw, thrower.rotationPitch);
-        this.posX -= MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
-        this.posY -= 0.10000000149011612D;
-        this.posZ -= MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
-        this.setPosition(this.posX, this.posY, this.posZ);
-        float f = 0.4F;
-        this.motionX = -MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * f;
-        this.motionZ = MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * f;
-        this.motionY = -MathHelper.sin((this.rotationPitch) / 180.0F * (float)Math.PI) * f;
-        this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, 1.5F, 1.0F);
         
-        this.resetLocationAndSpeed();
-        this.setPosition(px, py, pz);
-        this.setOrigPos(px, py, pz);       
+        float x = -MathHelper.sin(thrower.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(thrower.rotationPitch / 180.0F * (float)Math.PI);
+        float z =  MathHelper.cos(thrower.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(thrower.rotationPitch / 180.0F * (float)Math.PI);
+        float y = -MathHelper.sin(thrower.rotationPitch / 180.0F * (float)Math.PI);
+        
+        this.setPosition(thrower.posX + 2 * x, thrower.posY + thrower.getEyeHeight() + 2 * y, thrower.posZ + 2 * z);
+        
+        this.motionX = x * 0.4F;
+        this.motionZ = z * 0.4F;
+        this.motionY = y * 0.4F;
+        
+        this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, SPEED, 0.0F);
+        this.setOrigPos(this.posX, this.posY, this.posZ);
+        
         this.ignoreFrustumCheck = true;
         this.age = 100;
         this.mGravity = 0F;
@@ -84,23 +84,20 @@ public class EntityRailgun extends EntityHasOwner implements IProjectile{
      * Similar to setArrowHeading, it's point the throwable entity to a x, y, z direction.
      */
     @Override
-	public void setThrowableHeading(double p_70186_1_, double p_70186_3_, double p_70186_5_, float p_70186_7_, float p_70186_8_) {
-        float f2 = MathHelper.sqrt_double(p_70186_1_ * p_70186_1_ + p_70186_3_ * p_70186_3_ + p_70186_5_ * p_70186_5_);
-        p_70186_1_ /= f2;
-        p_70186_3_ /= f2;
-        p_70186_5_ /= f2;
-        p_70186_1_ += this.rand.nextGaussian() * 0.007499999832361937D * p_70186_8_;
-        p_70186_3_ += this.rand.nextGaussian() * 0.007499999832361937D * p_70186_8_;
-        p_70186_5_ += this.rand.nextGaussian() * 0.007499999832361937D * p_70186_8_;
-        p_70186_1_ *= p_70186_7_;
-        p_70186_3_ *= p_70186_7_;
-        p_70186_5_ *= p_70186_7_;
-        this.motionX = p_70186_1_;
-        this.motionY = p_70186_3_;
-        this.motionZ = p_70186_5_;
-        float f3 = MathHelper.sqrt_double(p_70186_1_ * p_70186_1_ + p_70186_5_ * p_70186_5_);
-        this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(p_70186_1_, p_70186_5_) * 180.0D / Math.PI);
-        this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(p_70186_3_, f3) * 180.0D / Math.PI);
+	public void setThrowableHeading(double motionX, double motionY, double motionZ, float newSpeed, float p_70186_8_) {
+        float f2 = MathHelper.sqrt_double(motionX * motionX + motionY * motionY + motionZ * motionZ);
+        motionX /= f2;
+        motionY /= f2;
+        motionZ /= f2;
+        motionX *= newSpeed;
+        motionY *= newSpeed;
+        motionZ *= newSpeed;
+        this.motionX = motionX;
+        this.motionY = motionY;
+        this.motionZ = motionZ;
+        float f3 = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
+        this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(motionX, motionZ) * 180.0D / Math.PI);
+        this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(motionY, f3) * 180.0D / Math.PI);
         this.ticksInGround = 0;
     }
 
@@ -270,25 +267,6 @@ public class EntityRailgun extends EntityHasOwner implements IProjectile{
             this.setDead();
         }
     }
-	
-    // 重新设置位置和速度
-	protected void resetLocationAndSpeed() {
-		EntityPlayer thrower = this.getOwner();
-        this.setLocationAndAngles(thrower.posX, thrower.posY + thrower.getEyeHeight(), thrower.posZ, thrower.rotationYaw, thrower.rotationPitch);
-        this.motionX = -MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI);
-        this.motionZ = MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI);
-        this.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
-        this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, SPEED, 0.0F);
-	}
-	
-	public void resetSpeed() {
-		EntityPlayer thrower = this.getOwner();
-		Vec3d d = new Vec3d(this.posX - thrower.posX, this.posY - thrower.getEyeHeight() - thrower.posY, this.posZ - thrower.posZ).normalize();
-        this.motionX = d.xCoord;
-        this.motionZ = d.zCoord;
-        this.motionY = d.yCoord;
-        this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, SPEED, 0.0F);
-	}
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {

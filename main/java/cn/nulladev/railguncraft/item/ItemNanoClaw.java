@@ -53,6 +53,7 @@ public class ItemNanoClaw extends RGCItemBase implements IElectricItem {
 				return;
 			}
 	    }
+		
 	    if (slot < 9) {
 	    	if (!ElectricItem.manager.use(stack, 4.0D, (EntityLivingBase)entity)) {
 	    		setActive(stack.getTagCompound(), false);
