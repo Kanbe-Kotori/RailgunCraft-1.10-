@@ -16,6 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import cn.nulladev.railguncraft.block.BlockAdvCraftingTable;
 import cn.nulladev.railguncraft.client.renderer.RendererEMPShield;
@@ -85,7 +86,6 @@ public class Registerer {
 		ModelLoader.setCustomModelResourceLocation(railgun, 0, new ModelResourceLocation("railguncraft:railgun", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(railgun_adv, 0, new ModelResourceLocation("railguncraft:railgun_adv", "inventory"));
 
-		
 		ModelLoader.setCustomMeshDefinition(EMP_shield, new ItemMeshDefinition() {
 			@Override
 			public ModelResourceLocation getModelLocation(ItemStack stack) {
@@ -111,6 +111,9 @@ public class Registerer {
 	}
 	
 	private static void registerRecipes() {
+		//normal recipe
+		GameRegistry.addRecipe(new ItemStack(adv_crafting_table), new Object[] { "DBD", "CAC", "CCC", 'A', IC2Items.getItem("re_battery"), 'B', Blocks.CRAFTING_TABLE, 'C', IC2Items.getItem("casing", "iron"), 'D', IC2Items.getItem("crafting", "circuit")});
+		
 		//------------electromagnet------------
 		ItemStack irsh = IC2Items.getItem("crafting", "iron_shaft").copy();
 		ItemStack cpcb = IC2Items.getItem("cable", "type:copper,insulation:1").copy();
@@ -134,7 +137,7 @@ public class Registerer {
 				{cpgd, cpgd, cpgd, cpgd, cpgd},
 				{cpgd, cpgd, cpgd, cpgd, cpgd}
 		};
-		electromagnet.setRecipe(reactants_electromagnet_adv);
+		electromagnet_adv.setRecipe(reactants_electromagnet_adv);
 		//------------electromagnet_adv end------------
 		
 		//------------railgun------------

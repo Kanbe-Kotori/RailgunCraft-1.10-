@@ -9,6 +9,7 @@ import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergyTile;
+import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import ic2.api.network.INetworkDataProvider;
 import ic2.api.network.INetworkUpdateListener;
@@ -122,6 +123,15 @@ public class TileEntityAdvCraftingTable extends TileEntity implements ITickable,
 			this.onLoaded();
 		if (this.loadState != 2)
 			return;
+		
+		if (this.currentBuffer < this.maxBuffer) {
+			if (stack[26] != null && stack[26].getItem() instanceof IElectricItem) {
+				double charge = ElectricItem.manager.discharge(stack[26], getDemandedEnergy(), this.getSinkTier(), false, true, false);;
+				if (charge > 0) {
+					this.currentBuffer += charge;
+				}
+			}
+		}
 		
 		ItemStack[][] s = {
 				{stack[0], 	stack[1], 	stack[2], 	stack[3], 	stack[4]},
@@ -261,7 +271,7 @@ public class TileEntityAdvCraftingTable extends TileEntity implements ITickable,
 
 	@Override
 	public double getDemandedEnergy() {
-		return currentBuffer >= maxBuffer? 0 : Math.max(maxBuffer - currentBuffer, 128);
+		return currentBuffer >= maxBuffer? 0 : Math.min(maxBuffer - currentBuffer, 128);
 	}
 
 	@Override

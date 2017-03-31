@@ -75,7 +75,7 @@ public class ItemRailgun extends RGCItemBase implements IElectricItem {
 			
 		}
 		
-		player.worldObj.spawnEntityInWorld(new EntityRailgun(player.worldObj, player));
+		player.worldObj.spawnEntityInWorld(new EntityRailgun(player.worldObj, player, isAdvanced));
 		player.openContainer.detectAndSendChanges();
 		
 		return new ActionResult(EnumActionResult.SUCCESS, stack);

@@ -22,8 +22,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityRailgun extends EntityHasOwner implements IProjectile{
 	
-	protected static final float SPEED = 2.0F;
-	protected static final float DAMAGE = 16.0F;
+	protected float SPEED = 1.5F;
+	protected float DAMAGE = 16F;
+	
+	public boolean isAdvanced = false;
 	
 	private int tileX = -1;
     private int tileY = -1;
@@ -37,12 +39,17 @@ public class EntityRailgun extends EntityHasOwner implements IProjectile{
     protected float velocityDecreaseRate = 0.99F;
     public int age = 40;
     	
-	public EntityRailgun(World world, EntityPlayer thrower, double px, double py, double pz) {
+	public EntityRailgun(World world, EntityPlayer thrower, boolean isAdv) {
         super(world);
         
         this.setOwner(thrower);
         this.setSize(0.2F, 0.2F);
         this.mGravity = 0;
+        this.isAdvanced = isAdv;
+        
+        if (isAdv) {
+        	SPEED = 4.5F;	DAMAGE = 48F;
+        }
         
         float x = -MathHelper.sin(thrower.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(thrower.rotationPitch / 180.0F * (float)Math.PI);
         float z =  MathHelper.cos(thrower.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(thrower.rotationPitch / 180.0F * (float)Math.PI);
@@ -60,10 +67,6 @@ public class EntityRailgun extends EntityHasOwner implements IProjectile{
         this.ignoreFrustumCheck = true;
         this.age = 100;
         this.mGravity = 0F;
-	}
-	
-	public EntityRailgun(World world, EntityPlayer thrower) {
-		this(world, thrower, thrower.posX + 2 * thrower.getLookVec().normalize().xCoord, thrower.posY + thrower.eyeHeight + 2 * thrower.getLookVec().normalize().yCoord, thrower.posZ + 2 * thrower.getLookVec().normalize().zCoord);
 	}
 	
 	public EntityRailgun(World world) {
@@ -263,7 +266,7 @@ public class EntityRailgun extends EntityHasOwner implements IProjectile{
     		target.entityHit.attackEntityFrom(new EntityDamageSource("lightningBolt", thrower).setProjectile().setDamageBypassesArmor(), DAMAGE);
         }
         if (!this.worldObj.isRemote) {
-    		worldObj.createExplosion(this.getOwner(), this.posX, this.posY, this.posZ, 2.0F, ConfigLoader.canRailgunDestroyBlocks);
+    		worldObj.createExplosion(this.getOwner(), this.posX, this.posY, this.posZ, isAdvanced? 4.5F : 1.5F, ConfigLoader.canRailgunDestroyBlocks);
             this.setDead();
         }
     }

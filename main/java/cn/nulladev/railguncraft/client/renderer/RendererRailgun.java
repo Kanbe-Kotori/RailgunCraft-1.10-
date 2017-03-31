@@ -35,10 +35,10 @@ public class RendererRailgun extends Render {
         GlStateManager.disableTexture2D();
         GlStateManager.disableCull();
         GlStateManager.enableBlend();
-        GlStateManager.blendFunc(770, 1);  
+        GlStateManager.blendFunc(770, 772);  
         GlStateManager.depthMask(false);
                 
-        GlStateManager.color(1F, 1F, 0.5F, 0.5F);
+        //GlStateManager.color(1F, 1F, 0.5F, 0.5F);
             
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer worldrenderer = tessellator.getBuffer();
@@ -51,10 +51,17 @@ public class RendererRailgun extends Render {
             GL11.glNormal3f(0.0F, 0.0F, 1.0F);
             worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
             
-            worldrenderer.pos(0.0D, -0.2D, 0.0D).color(1F, 1F, 0.5F, 0.5F).endVertex();
-            worldrenderer.pos(length, -0.2D, 0.0D).color(1F, 1F, 0.5F, 0.5F).endVertex();
-            worldrenderer.pos(length, 0.2D, 0.0D).color(1F, 1F, 0.5F, 0.5F).endVertex();
-            worldrenderer.pos(0.0D, 0.2D, 0.0D).color(1F, 1F, 0.5F, 0.5F).endVertex();
+            if (entity.isAdvanced) {
+	            worldrenderer.pos(0.0D, -0.2D, 0.0D).color(1F, 1F, 0F, 1F).endVertex();
+	            worldrenderer.pos(length, -0.2D, 0.0D).color(1F, 1F, 0F, 1F).endVertex();
+	            worldrenderer.pos(length, 0.2D, 0.0D).color(1F, 1F, 0F, 1F).endVertex();
+	            worldrenderer.pos(0.0D, 0.2D, 0.0D).color(1F, 1F, 0F, 1F).endVertex();
+            } else {
+            	worldrenderer.pos(0.0D, -0.2D, 0.0D).color(1F, 1F, 0.5F, 0.5F).endVertex();
+	            worldrenderer.pos(length, -0.2D, 0.0D).color(1F, 1F, 0.5F, 0.5F).endVertex();
+	            worldrenderer.pos(length, 0.2D, 0.0D).color(1F, 1F, 0.5F, 0.5F).endVertex();
+	            worldrenderer.pos(0.0D, 0.2D, 0.0D).color(1F, 1F, 0.5F, 0.5F).endVertex();
+            }
 
             tessellator.draw();
         }
