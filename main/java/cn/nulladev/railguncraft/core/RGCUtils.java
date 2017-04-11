@@ -1,5 +1,8 @@
 package cn.nulladev.railguncraft.core;
 
+import org.lwjgl.input.Keyboard;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,5 +34,13 @@ public class RGCUtils {
 		
 		return false;
 	}
+	
+	public static boolean isShiftKeyDown() {
+        return Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54);
+    }
+	
+	public static boolean isCtrlKeyDown() {
+        return Minecraft.IS_RUNNING_ON_MAC ? Keyboard.isKeyDown(219) || Keyboard.isKeyDown(220) : Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157);
+    }
 
 }

@@ -1,3 +1,4 @@
+item.elecalibur.name=誓约电力之剑
 item.electromagnet.name=电磁铁
 item.electromagnet_adv.name=高级电磁铁
 item.EMP_shield.name=电磁屏障
@@ -5,8 +6,12 @@ item.nano_claw.name=纳米爪
 item.railgun.name=电磁炮
 item.railgun_adv.name=科学的超电磁炮
 
+item.elecalibur.info=通过高科技手段仿制的某传说中的圣剑。
 item.nano_claw.info=看!它的伤害在跳动
 item.railgun_adv.info=这个物品名字和某部动漫绝对没有任何联系。
+
+item.state_on.info=当前状态：开启
+item.state_off.info=当前状态：关闭
 
 tile.adv_crafting_table.name=高级电力合成台
 

@@ -25,6 +25,7 @@ import cn.nulladev.railguncraft.entity.EntityEMPShield;
 import cn.nulladev.railguncraft.entity.EntityRailgun;
 import cn.nulladev.railguncraft.event.DamageRecalc;
 import cn.nulladev.railguncraft.item.ItemEMPShield;
+import cn.nulladev.railguncraft.item.ItemElecalibur;
 import cn.nulladev.railguncraft.item.ItemElectromagnet;
 import cn.nulladev.railguncraft.item.ItemNanoClaw;
 import cn.nulladev.railguncraft.item.ItemRailgun;
@@ -32,6 +33,7 @@ import cn.nulladev.railguncraft.item.RGCItemBase;
 
 public class Registerer {
 	
+	public static RGCItemBase elecalibur;
 	public static RGCItemBase electromagnet;
 	public static RGCItemBase electromagnet_adv;
 	public static RGCItemBase EMP_shield;
@@ -50,6 +52,7 @@ public class Registerer {
 	}
 	
 	private static void registerItems() {
+		elecalibur = new ItemElecalibur();
 		electromagnet = new ItemElectromagnet(false);
 		electromagnet_adv = new ItemElectromagnet(true);
 		EMP_shield = new ItemEMPShield();
@@ -81,6 +84,7 @@ public class Registerer {
 	}
 	
 	public static void registerModels() {
+		ModelLoader.setCustomModelResourceLocation(elecalibur, 0, new ModelResourceLocation("railguncraft:elecalibur", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(electromagnet, 0, new ModelResourceLocation("railguncraft:electromagnet", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(electromagnet_adv, 0, new ModelResourceLocation("railguncraft:electromagnet_adv", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(railgun, 0, new ModelResourceLocation("railguncraft:railgun", "inventory"));
@@ -199,6 +203,21 @@ public class Registerer {
 		};
 		EMP_shield.setRecipe(reactants_EMP_shield);
 		//------------EMP_shield end------------
+		
+		//------------elecalibur------------
+		ItemStack gapp = new ItemStack(Items.GOLDEN_APPLE, 1, 1);
+		ItemStack gdbl = new ItemStack(Item.getItemFromBlock(Blocks.GOLD_BLOCK), 1);
+		ItemStack adrg = new ItemStack(railgun_adv, 1);
+		ItemStack nnsb = IC2Items.getItem("nano_saber").copy();
+		ItemStack[][] reactants_elecalibur = {
+				{null, null, null, gdbl, adrg},
+				{null, null, gdbl, lpcr, gdbl},
+				{plri, gdbl, lpcr, gdbl, null},
+				{null, nnsb, gdbl, null, null},
+				{gapp, null, plri, null, null}
+		};
+		elecalibur.setRecipe(reactants_elecalibur);
+		//------------elecalibur end------------
 		
 	}
 	
