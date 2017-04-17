@@ -1,3 +1,4 @@
+item.elecalibur.name=Elecalibur
 item.electromagnet.name=Electromagnet
 item.electromagnet_adv.name=Advanced Electromagnet
 item.EMP_shield.name=EMP Shield
@@ -5,7 +6,13 @@ item.nano_claw.name=Nano Claw
 item.railgun.name=Railgun
 item.railgun_adv.name=Super Scientific Railgun
 
-tile.adv_crafting_table.name=Advanced Crafting Table
+item.elecalibur.info=this fake Excalibur is made through high-tech ways.
+item.nano_claw.info=see!it deals randomly damage.
 item.railgun_adv.info=this name doesn't have any contact with a certain anime.
+
+item.state_on.info=current state:on
+item.state_off.info=current state:off
+
+tile.adv_crafting_table.name=Advanced Crafting Table
 
 itemGroup.RailgunCraft=RailgunCraft
