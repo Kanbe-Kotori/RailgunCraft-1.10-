@@ -11,7 +11,7 @@ import net.minecraft.util.text.translation.I18n;
 
 public class GuiAdvCraftingTable extends GuiContainer {
 	 
-	protected ResourceLocation gui = new ResourceLocation("railguncraft","textures/gui/GuiAdvCraftingTable.png");
+	protected ResourceLocation gui = new ResourceLocation("railguncraft","textures/GUIs/GuiAdvCraftingTable.png");
 	protected int xSize = 176;
     protected int ySize = 192;
 	private TileEntityAdvCraftingTable tileentity;

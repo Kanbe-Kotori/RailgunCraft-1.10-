@@ -17,6 +17,8 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import cn.nulladev.railguncraft.block.BlockAdvCraftingTable;
 import cn.nulladev.railguncraft.client.renderer.RendererEMPShield;
@@ -67,22 +69,25 @@ public class Registerer {
 	
 	private static void registerEntities(Object mod) {
 		EntityRegistry.registerModEntity(EntityRailgun.class, "Railgun", 1, mod, 128, 1, true);
+		EntityRegistry.registerModEntity(EntityEMPShield.class, "EMPShield", 2, mod, 128, 1, true);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static void registerEntityRenders() {
 		RenderingRegistry.registerEntityRenderingHandler(EntityRailgun.class, new IRenderFactory() {
 			public Render<EntityRailgun> createRenderFor(RenderManager manager) {
 				return new RendererRailgun(manager);
 			}
 		});
-		//RenderingRegistry.registerEntityRenderingHandler(EntityRailgun.class, new RendererRailgun());
 		
-		EntityRegistry.registerModEntity(EntityEMPShield.class, "EMPShield", 2, mod, 128, 1, true);
 		RenderingRegistry.registerEntityRenderingHandler(EntityEMPShield.class, new IRenderFactory() {
 			public Render<EntityEMPShield> createRenderFor(RenderManager manager) {
 				return new RendererEMPShield(manager);
 			}
 		});
-		//RenderingRegistry.registerEntityRenderingHandler(EntityEMPShield.class, new RendererEMPShield());
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public static void registerModels() {
 		ModelLoader.setCustomModelResourceLocation(elecalibur, 0, new ModelResourceLocation("railguncraft:elecalibur", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(electromagnet, 0, new ModelResourceLocation("railguncraft:electromagnet", "inventory"));
