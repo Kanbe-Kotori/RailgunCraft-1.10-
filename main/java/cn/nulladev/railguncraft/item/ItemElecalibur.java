@@ -92,7 +92,7 @@ public class ItemElecalibur extends RGCItemBase implements IElectricItem {
 
 		NBTTagCompound nbt = RGCUtils.get_or_create_nbt(stack);
 		
-		if (!RGCUtils.isShiftKeyDown()) {
+		if (!player.isSneaking()) {
 			if (isActive(nbt)) {
 		    	setActive(nbt, false);
 		    } else if (ElectricItem.manager.canUse(stack, 64.0D)) {
